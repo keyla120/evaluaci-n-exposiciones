@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evaluación de Exposiciones — Comidas Típicas de Nicaragua</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #F7F6F2;
+    --surface: #FFFFFF;
+    --surface2: #F0EEE8;
+    --border: rgba(0,0,0,0.10);
+    --border2: rgba(0,0,0,0.18);
+    --text: #1A1916;
+    --text2: #6B6960;
+    --text3: #9E9D97;
+    --green-bg: #E1F5EE; --green-text: #0F6E56;
+    --amber-bg: #FAEEDA; --amber-text: #854F0B;
+    --red-bg: #FCEBEB; --red-text: #A32D2D;
+    --accent: #1A5C3A;
+    --accent-light: #E1F5EE;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+  header {
+    background: var(--accent);
+    color: #fff;
+    padding: 2rem 2rem 1.5rem;
+  }
+  header h1 {
+    font-size: 22px;
+    font-weight: 600;
+    letter-spacing: -0.3px;
+    margin-bottom: 4px;
+  }
+  header p {
+    font-size: 13px;
+    opacity: 0.75;
+  }
+  .header-meta {
+    display: flex;
+    gap: 10px;
+    margin-top: 1rem;
+    flex-wrap: wrap;
+  }
+  .header-pill {
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 99px;
+    padding: 4px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #fff;
+    display: flex; align-items: center; gap: 6px;
+  }
+  main { max-width: 780px; margin: 0 auto; padding: 2rem 1.25rem; }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-bottom: 1.75rem;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 16px;
+  }
+  .stat-label { font-size: 11px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .stat-val { font-size: 22px; font-weight: 600; color: var(--text); }
+  .group-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+  .group-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+  .group-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    background: var(--surface2);
+    border-bottom: 0.5px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .group-title {
+    font-size: 15px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text);
+  }
+  .group-name-input {
+    background: transparent;
+    border: none;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    outline: none;
+    cursor: text;
+    min-width: 80px;
+    max-width: 220px;
+  }
+  .group-name-input:focus {
+    border-bottom: 1.5px solid var(--accent);
+  }
+  .badge {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 3px 12px;
+    border-radius: 99px;
+  }
+  .badge-green { background: var(--green-bg); color: var(--green-text); }
+  .badge-amber { background: var(--amber-bg); color: var(--amber-text); }
+  .badge-red { background: var(--red-bg); color: var(--red-text); }
+  .chevron { transition: transform 0.2s; font-size: 18px; color: var(--text3); }
+  .chevron.open { transform: rotate(180deg); }
+  .group-body { display: block; }
+  .group-body.collapsed { display: none; }
+  table.ctable { width: 100%; border-collapse: collapse; }
+  .ctable th {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+    color: var(--text3);
+    padding: 10px 16px;
+    text-align: left;
+    border-bottom: 0.5px solid var(--border);
+    font-weight: 500;
+  }
+  .ctable th.c { text-align: center; }
+  .ctable td {
+    padding: 12px 16px;
+    font-size: 14px;
+    border-bottom: 0.5px solid var(--border);
+    vertical-align: middle;
+  }
+  .ctable td.c { text-align: center; }
+  .ctable tr:last-child td { border-bottom: none; }
+  .crit-label { font-weight: 500; font-size: 14px; }
+  .crit-desc { font-size: 12px; color: var(--text2); margin-top: 2px; }
+  .score-input {
+    width: 56px;
+    text-align: center;
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 14px;
+    font-family: 'DM Mono', monospace;
+    background: var(--bg);
+    color: var(--text);
+    transition: border 0.15s, box-shadow 0.15s;
+  }
+  .score-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+  .maxpts { font-size: 13px; color: var(--text3); font-family: 'DM Mono', monospace; }
+  .total-row td { background: var(--accent-light); font-weight: 600; }
+  .total-score { font-size: 20px; font-weight: 700; color: var(--accent); font-family: 'DM Mono', monospace; }
+  .time-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-top: 0.5px solid var(--border);
+    background: var(--surface);
+  }
+  .time-label { font-size: 13px; color: var(--text2); }
+  .time-input {
+    width: 64px;
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+    padding: 5px 8px;
+    font-size: 13px;
+    font-family: 'DM Mono', monospace;
+    text-align: center;
+    background: var(--bg);
+    color: var(--text);
+    transition: border 0.15s;
+  }
+  .time-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+  .warn-time { font-size: 12px; color: var(--red-text); font-weight: 500; }
+  .obs-row { padding: 12px 16px; border-top: 0.5px solid var(--border); }
+  .obs-label { font-size: 12px; color: var(--text3); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.4px; }
+  textarea.obs {
+    width: 100%;
+    border: 0.5px solid var(--border2);
+    border-radius: 8px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    resize: vertical;
+    min-height: 60px;
+    transition: border 0.15s;
+  }
+  textarea.obs:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(26,92,58,0.12); }
+  .actions { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+    border: 0.5px solid var(--border2);
+    background: var(--surface);
+    color: var(--text);
+  }
+  button:hover { background: var(--surface2); }
+  button:active { transform: scale(0.98); }
+  button.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: transparent;
+  }
+  button.primary:hover { background: #144d30; }
+  .summary-section { margin-top: 2.5rem; }
+  .summary-title { font-size: 16px; font-weight: 600; margin-bottom: 12px; color: var(--text); }
+  .summary-table { width: 100%; border-collapse: collapse; background: var(--surface); border-radius: var(--radius-lg); overflow: hidden; border: 0.5px solid var(--border); }
+  .summary-table th { font-size: 11px; text-transform: uppercase; letter-spacing: 0.4px; color: var(--text3); padding: 10px 14px; text-align: left; border-bottom: 0.5px solid var(--border); background: var(--surface2); }
+  .summary-table td { padding: 11px 14px; font-size: 13px; border-bottom: 0.5px solid var(--border); color: var(--text); }
+  .summary-table tr:last-child td { border-bottom: none; }
+  .pill { display: inline-block; font-size: 11px; padding: 2px 10px; border-radius: 99px; font-weight: 600; }
+  footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--text3); }
+  @media print {
+    header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .actions { display: none; }
+    .group-body.collapsed { display: block !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1><i class="ti ti-clipboard-list" style="font-size:20px;vertical-align:-2px;margin-right:6px;"></i>Evaluación de exposiciones</h1>
+  <p>Inglés — Comidas típicas de Nicaragua</p>
+  <div class="header-meta">
+    <span class="header-pill"><i class="ti ti-star"></i> Nota máxima: 20 pts</span>
+    <span class="header-pill"><i class="ti ti-clock"></i> Duración límite: 10 min</span>
+    <span class="header-pill"><i class="ti ti-flag"></i> Idioma: Inglés</span>
+  </div>
+</header>
+
+<main>
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-label">Grupos</div>
+      <div class="stat-val" id="stat-grupos">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Evaluados</div>
+      <div class="stat-val" id="stat-eval">0</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Promedio</div>
+      <div class="stat-val" id="stat-prom">—</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Nota más alta</div>
+      <div class="stat-val" id="stat-max">—</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button class="primary" onclick="addGroup()"><i class="ti ti-plus"></i> Agregar grupo</button>
+    <button onclick="window.print()"><i class="ti ti-printer"></i> Imprimir</button>
+    <button onclick="exportCSV()"><i class="ti ti-download"></i> Exportar CSV</button>
+  </div>
+
+  <div id="grupos-container"></div>
+
+  <div class="summary-section" id="summary-section" style="display:none;">
+    <p class="summary-title">Resumen de calificaciones</p>
+    <table class="summary-table">
+      <thead>
+        <tr>
+          <th>Grupo</th>
+          <th>Contenido</th>
+          <th>Inglés</th>
+          <th>Presentación</th>
+          <th>Material</th>
+          <th>Participación</th>
+          <th>Tiempo</th>
+          <th>Nota final</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="summary-body"></tbody>
+    </table>
+  </div>
+</main>
+
+<footer>Tabla de evaluación — Inglés &nbsp;·&nbsp; Uso educativo</footer>
+
+<script>
+const CRITERIA = [
+  { id: 'contenido', label: 'Contenido e información', desc: 'Precisión, profundidad y relevancia sobre la comida típica', max: 5 },
+  { id: 'ingles', label: 'Uso del inglés', desc: 'Vocabulario, gramática, fluidez y pronunciación', max: 5 },
+  { id: 'presentacion', label: 'Presentación y organización', desc: 'Estructura clara: introducción, desarrollo y cierre', max: 4 },
+  { id: 'material', label: 'Material de apoyo', desc: 'Calidad visual (carteles, diapositivas, muestras, etc.)', max: 3 },
+  { id: 'participacion', label: 'Participación del grupo', desc: 'Todos los integrantes participan activamente', max: 3 },
+];
+
+let groups = [];
+let groupCount = 0;
+
+function addGroup() {
+  groupCount++;
+  groups.push({ id: groupCount, name: 'Grupo ' + groupCount, scores: {}, time: '', obs: '', collapsed: false });
+  renderGroups();
+  updateStats();
+}
+
+function calcTotal(g) {
+  return CRITERIA.reduce((s, c) => s + (parseFloat(g.scores[c.id]) || 0), 0);
+}
+
+function calcFinal(g) {
+  return Math.min(Math.round(calcTotal(g) * 10) / 10, 20);
+}
+
+function badgeClass(score) {
+  if (score >= 16) return 'badge-green';
+  if (score >= 11) return 'badge-amber';
+  return 'badge-red';
+}
+
+function renderGroups() {
+  const c = document.getElementById('grupos-container');
+  c.innerHTML = '';
+  groups.forEach(g => {
+    const final = calcFinal(g);
+    const bc = badgeClass(final);
+    const div = document.createElement('div');
+    div.className = 'group-card';
+    div.id = 'gc-' + g.id;
+    div.innerHTML = `
+      <div class="group-header" onclick="toggleGroup(${g.id})">
+        <div class="group-title">
+          <i class="ti ti-users" style="font-size:18px;color:#6B6960;"></i>
+          <input class="group-name-input" value="${g.name}"
+            onclick="event.stopPropagation()"
+            onchange="renameGroup(${g.id}, this.value)"
+            aria-label="Nombre del grupo">
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge ${bc}" id="badge-${g.id}">${final}/20</span>
+          <i class="ti ti-chevron-down chevron${g.collapsed ? '' : ' open'}" id="chev-${g.id}"></i>
+        </div>
+      </div>
+      <div class="group-body${g.collapsed ? ' collapsed' : ''}" id="gb-${g.id}">
+        <table class="ctable">
+          <thead>
+            <tr>
+              <th>Criterio</th>
+              <th class="c">Máx.</th>
+              <th class="c">Puntaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${CRITERIA.map(cr => `
+              <tr>
+                <td>
+                  <div class="crit-label">${cr.label}</div>
+                  <div class="crit-desc">${cr.desc}</div>
+                </td>
+                <td class="c"><span class="maxpts">${cr.max}</span></td>
+                <td class="c">
+                  <input class="score-input" type="number" min="0" max="${cr.max}" step="0.5"
+                    value="${g.scores[cr.id] !== undefined ? g.scores[cr.id] : ''}"
+                    placeholder="—"
+                    oninput="setScore(${g.id}, '${cr.id}', this.value, ${cr.max})"
+                    aria-label="Puntaje ${cr.label}">
+                </td>
+              </tr>
+            `).join('')}
+            <tr class="total-row">
+              <td colspan="2" style="font-size:15px;">Nota final</td>
+              <td class="c"><span class="total-score" id="tot-${g.id}">${final}/20</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="time-row">
+          <i class="ti ti-clock" style="font-size:16px;color:#9E9D97;"></i>
+          <span class="time-label">Tiempo usado (minutos):</span>
+          <input class="time-input" type="number" min="0" max="30" step="0.5"
+            value="${g.time}"
+            placeholder="—"
+            oninput="setTime(${g.id}, this.value)"
+            aria-label="Tiempo usado">
+          <span class="warn-time" id="pen-${g.id}">${parseFloat(g.time) > 10 ? '⚠ Excede el límite' : ''}</span>
+        </div>
+        <div class="obs-row">
+          <div class="obs-label"><i class="ti ti-notes" style="font-size:13px;vertical-align:-1px;margin-right:4px;"></i>Observaciones / retroalimentación</div>
+          <textarea class="obs" placeholder="Escribe comentarios sobre la exposición de este grupo..."
+            oninput="setObs(${g.id}, this.value)">${g.obs}</textarea>
+        </div>
+      </div>
+    `;
+    c.appendChild(div);
+  });
+}
+
+function setScore(id, crit, val, max) {
+  const g = groups.find(x => x.id === id);
+  if (!g) return;
+  let v = parseFloat(val);
+  g.scores[crit] = isNaN(v) ? 0 : Math.min(Math.max(v, 0), max);
+  const final = calcFinal(g);
+  const el = document.getElementById('tot-' + id);
+  if (el) el.textContent = final + '/20';
+  const badge = document.getElementById('badge-' + id);
+  if (badge) { badge.textContent = final + '/20'; badge.className = 'badge ' + badgeClass(final); }
+  updateStats();
+}
+
+function setTime(id, val) {
+  const g = groups.find(x => x.id === id);
+  if (!g) return;
+  g.time = val;
+  const el = document.getElementById('pen-' + id);
+  if (el) el.textContent = parseFloat(val) > 10 ? '⚠ Excede el límite' : '';
+  updateStats();
+}
+
+function setObs(id, val) {
+  const g = groups.find(x => x.id === id);
+  if (g) g.obs = val;
+}
+
+function renameGroup(id, val) {
+  const g = groups.find(x => x.id === id);
+  if (g) g.name = val.trim() || 'Grupo ' + id;
+  updateStats();
+}
+
+function toggleGroup(id) {
+  const g = groups.find(x => x.id === id);
+  if (!g) return;
+  g.collapsed = !g.collapsed;
+  const body = document.getElementById('gb-' + id);
+  const chev = document.getElementById('chev-' + id);
+  if (body) body.className = 'group-body' + (g.collapsed ? ' collapsed' : '');
+  if (chev) chev.className = 'ti ti-chevron-down chevron' + (g.collapsed ? '' : ' open');
+}
+
+function updateStats() {
+  document.getElementById('stat-grupos').textContent = groups.length;
+  const scored = groups.filter(g => calcTotal(g) > 0);
+  document.getElementById('stat-eval').textContent = scored.length;
+  if (scored.length === 0) {
+    document.getElementById('stat-prom').textContent = '—';
+    document.getElementById('stat-max').textContent = '—';
+  } else {
+    const finals = scored.map(g => calcFinal(g));
+    const avg = finals.reduce((a, b) => a + b, 0) / finals.length;
+    document.getElementById('stat-prom').textContent = (Math.round(avg * 10) / 10) + ' pts';
+    document.getElementById('stat-max').textContent = Math.max(...finals) + ' pts';
+  }
+  updateSummary();
+}
+
+function updateSummary() {
+  const section = document.getElementById('summary-section');
+  const body = document.getElementById('summary-body');
+  if (groups.length === 0) { section.style.display = 'none'; return; }
+  section.style.display = 'block';
+  body.innerHTML = groups.map(g => {
+    const final = calcFinal(g);
+    const pc = final >= 16 ? 'badge-green' : final >= 11 ? 'badge-amber' : 'badge-red';
+    const status = final >= 16 ? 'Aprobado' : final >= 11 ? 'Regular' : 'En riesgo';
+    const timeStr = g.time ? g.time + ' min' + (parseFloat(g.time) > 10 ? ' ⚠' : '') : '—';
+    return `<tr>
+      <td style="font-weight:500;">${g.name}</td>
+      <td>${g.scores.contenido !== undefined ? g.scores.contenido : '—'}/5</td>
+      <td>${g.scores.ingles !== undefined ? g.scores.ingles : '—'}/5</td>
+      <td>${g.scores.presentacion !== undefined ? g.scores.presentacion : '—'}/4</td>
+      <td>${g.scores.material !== undefined ? g.scores.material : '—'}/3</td>
+      <td>${g.scores.participacion !== undefined ? g.scores.participacion : '—'}/3</td>
+      <td>${timeStr}</td>
+      <td style="font-weight:700;font-size:15px;">${final}/20</td>
+      <td><span class="pill badge ${pc}">${status}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function exportCSV() {
+  let csv = 'Grupo,Contenido/5,Inglés/5,Presentación/4,Material/3,Participación/3,Tiempo(min),Nota Final/20,Estado\n';
+  groups.forEach(g => {
+    const final = calcFinal(g);
+    const status = final >= 16 ? 'Aprobado' : final >= 11 ? 'Regular' : 'En riesgo';
+    csv += [
+      g.name,
+      g.scores.contenido !== undefined ? g.scores.contenido : '',
+      g.scores.ingles !== undefined ? g.scores.ingles : '',
+      g.scores.presentacion !== undefined ? g.scores.presentacion : '',
+      g.scores.material !== undefined ? g.scores.material : '',
+      g.scores.participacion !== undefined ? g.scores.participacion : '',
+      g.time || '',
+      final,
+      status
+    ].join(',') + '\n';
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'evaluacion_exposiciones.csv';
+  a.click();
+}
+
+addGroup();
+</script>
+</body>
+</html>
